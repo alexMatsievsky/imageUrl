@@ -1,0 +1,90 @@
+<ng-container *ngIf="(imagesState$ | async) as state" [ngSwitch]="state.appState">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-black">
+    <div class="container">
+      <a class="navbar-brand" href="#">Novisign</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+              aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12 mt-5 ">
+        <ng-container *ngSwitchCase="'APP_ERROR'"><span style="color: red;">there was an error</span></ng-container>
+        <ng-container *ngSwitchCase="'APP_LOADING'">
+          <div class="d-flex justify-content-center mt-4">
+            <div class="spinner-border" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+        </ng-container>
+        <ng-container *ngSwitchCase="'APP_LOADED'">
+          <h3>Photo list</h3>
+          <table class="table table-striped">
+            <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Url</th>
+              <th scope="col">Duration</th>
+              <th scope="col">Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let image of state.appData.data.images; let i = index;">
+              <th scope="row">{{ image.id }}</th>
+              <td><img [src]="image.url" width="42" height="42" class="rounded-circle"></td>
+              <td>{{ image.duration }}</td>
+              <td>
+                <button type="button"
+                        (click)="deleteImage($event, image.id)"
+                        class="btn btn-danger">
+                        Delete
+                </button>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+
+          <div>
+            <div class="container mt-5">
+              <div class="image">
+                <div class="image-header">
+                  <h4>Add Image </h4>
+                </div>
+                <div class="image-body">
+                  <form (ngSubmit)="saveImage()">
+                    <div class="mb-3">
+                      <label>Url</label>
+                      <input type="text" [(ngModel)]="url" name="url" class="form-control"/>
+                    </div>
+                    <div class="mb-3">
+                      <label>Duration</label>
+                      <input type="text" [(ngModel)]="duration" name="duration" class="form-control"/>
+                    </div>
+                    <div class="mb-3">
+                      <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+
+            <div class="slideshow">
+              <div class="slideshow">
+                <h2>Slideshow</h2>
+              </div>
+              <div class="slide" *ngFor="let image of images; let i = index" [class.active]="i === currentIndex">
+                <img [src]="image.url" alt="Image {{i}}">
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</ng-container>
